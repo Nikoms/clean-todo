@@ -6,6 +6,8 @@ This time, i'll make a todo list... But a todo list with clean architecture prin
 - If you have an idea of a feature or a question, use the [issue](https://github.com/Nikoms/clean-todo/issues) tab
 - If you want to see the priorities of this biiiig project, use the [project](https://github.com/Nikoms/clean-todo/projects/1) tab
 - Conclusion of "problems" or choices will be explained on [my blog](http://www.mechantblog.com) (https will come soon :)
+- The final result is available [here](https://naughty-banach-1ccbd2.netlify.app/)
+
 
 
 ## Other remarks
