@@ -22,23 +22,15 @@ const TodoList = () => {
     fetchTodosFromApi().then(list => setTodoList(list));
   }, []);
 
-  //2. One solution would be to recalculate the counters on each render
+  //2. We still have our counters that are recalculate on every render
   const ongoingCount = todos.filter(t => t.done).length;
   const doneCount = todos.filter(t => !t.done).length;
 
+  // 3. And we have a new cool feature that count the number of time we click on titles (best feature ever asked by the CEO)
+  const [clickCount, setClickCount] = useState(0);
 
-  //4. See how many render ?
-  console.log('render with', {total: todos.length, ongoingCount, doneCount});
-  // On first load it renders only 2 times (perfect!):
-  // render with { total: 0, ongoingCount: 0, doneCount: 0 }
-  // render with { total: 5, ongoingCount: 0, doneCount: 5 }
-
-  // When I set one of the todos as "done", it re-renders only 1 time
-  // render with { total: 5, ongoingCount: 1, doneCount: 4 }
-
-  //2 conclusions: 
-  // - We have the perfect render count...
-  // - ...But there is a but... (see next commit) 
+  //Conclusion: 
+  // - Calling "setClickCount" will re-render the component and our "ongoingCount" and "doneCount" will be recalculate everytime... It's fine for this example, but it can be problematic if the computation is heavy and can block your main thread
 
   const addEmptyTodo = () => setTodoList([createTodo('Relax! Edition will come...', false), ...todos]);
   const markAsDone = (index) => setTodoList([...todos.slice(0, index), {
@@ -51,7 +43,7 @@ const TodoList = () => {
     <table>
       <thead>
       <tr>
-        <th rowSpan={2} align="left">My todos ({ongoingCount} ongoing /{doneCount} done)
+        <th rowSpan={2} align="left">My todos ({ongoingCount} ongoing /{doneCount} done/ {clickCount} clicks)
           <button onClick={addEmptyTodo}>Add</button>
         </th>
       </tr>
@@ -59,7 +51,7 @@ const TodoList = () => {
       <tbody>
       {todos.map((todo, index) => (
         <tr key={todo.id}>
-          <td>{todo.title}</td>
+          <td onClick={() => setClickCount(() => clickCount + 1)}>{todo.title}</td>
           <td><input type="checkbox" value="1" checked={todo.done} onChange={() => markAsDone(index)}/></td>
         </tr>
       ))}
