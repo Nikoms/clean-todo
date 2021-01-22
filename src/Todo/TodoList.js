@@ -22,30 +22,23 @@ const TodoList = () => {
     fetchTodosFromApi().then(list => setTodoList(list));
   }, []);
 
-  //2. And we have a state for 2 counter
-  const [ongoingCount, setOngoingCount] = useState(0);
-  const [doneCount, setDoneCount] = useState(0);
+  //2. One solution would be to recalculate the counters on each render
+  const ongoingCount = todos.filter(t => t.done).length;
+  const doneCount = todos.filter(t => !t.done).length;
 
-  // 3. We will update the counters when the list changes
-  useEffect(function refreshCounters() {
-    setDoneCount(todos.filter(t => t.done).length);
-    setOngoingCount(todos.filter(t => !t.done).length);
-  }, [todos]);
 
   //4. See how many render ?
   console.log('render with', {total: todos.length, ongoingCount, doneCount});
-  // On first load it renders 3 times:
-  // render with { total: 0, ongoingCount: 0, doneCount: 0 } ==> Before "callApi"
-  // render with { total: 5, ongoingCount: 0, doneCount: 0 } ==> After "callApi"
-  // render with { total: 5, ongoingCount: 5, doneCount: 0 } ==> After "refreshCounters". React is smart an only re-render when the value really changes. Here "doneCount" is "updated" from 0 to 0, so it does not re-render
+  // On first load it renders only 2 times (perfect!):
+  // render with { total: 0, ongoingCount: 0, doneCount: 0 }
+  // render with { total: 5, ongoingCount: 0, doneCount: 5 }
 
-  // When I set one of the todos as "done", it re-renders only 2 times (but 3 things changed: todos, ongoingCount and doneCount, do you know why?)
-  // render with { total: 5, ongoingCount: 5, doneCount: 0 } ==> when setTodoList is called
-  // render with { total: 5, ongoingCount: 4, doneCount: 1 } ==> when setDoneCount/setOngoingCount is called (after useEffect)
-  
+  // When I set one of the todos as "done", it re-renders only 1 time
+  // render with { total: 5, ongoingCount: 1, doneCount: 4 }
+
   //2 conclusions: 
-  // - We have too many render!
-  // - React seems to wait the end of the useEffect to re-render the component (smart!)
+  // - We have the perfect render count...
+  // - ...But there is a but... (see next commit) 
 
   const addEmptyTodo = () => setTodoList([createTodo('Relax! Edition will come...', false), ...todos]);
   const markAsDone = (index) => setTodoList([...todos.slice(0, index), {
