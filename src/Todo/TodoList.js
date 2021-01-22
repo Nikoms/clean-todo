@@ -33,9 +33,9 @@ const TodoList = () => {
   // - Use "useMemo" for heavy computation or when you have a lot of re-rendering
 
   const addEmptyTodo = () => setTodoList([createTodo('Relax! Edition will come...', false), ...todos]);
-  const markAsDone = (index) => setTodoList([...todos.slice(0, index), {
+  const toggleDone = (index) => setTodoList([...todos.slice(0, index), {
     ...todos[index],
-    done: true,
+    done: !todos[index].done,
   }, ...todos.slice(index + 1)]);
 
 
@@ -52,7 +52,7 @@ const TodoList = () => {
       {todos.map((todo, index) => (
         <tr key={todo.id}>
           <td onClick={() => setClickCount(() => clickCount + 1)}>{todo.title}</td>
-          <td><input type="checkbox" value="1" checked={todo.done} onChange={() => markAsDone(index)}/></td>
+          <td><input type="checkbox" value="1" checked={todo.done} onChange={() => toggleDone(index)}/></td>
         </tr>
       ))}
       </tbody>
