@@ -25,11 +25,17 @@ class TodoListPresenter {
       todos: [],
       doneCount: 0,
       ongoingCount: 0,
+      clickCount: 0,
     };
   }
 
   loadTodos() {
     this.useCase.getTodos().then(todos => this._setTodoList(todos));
+  }
+
+  incrementClickCount() {
+    this.viewModel.clickCount += 1;
+    this.viewModelListener({...this.viewModel});
   }
 
   onViewModelChange(callback) {
@@ -57,7 +63,6 @@ class TodoListPresenter {
 }
 
 const TodoList = ({presenter, viewModel}) => {
-  const [clickCount, setClickCount] = useState(0);
   useEffect(() => {
     presenter.loadTodos();
   }, [presenter]);
@@ -67,7 +72,7 @@ const TodoList = ({presenter, viewModel}) => {
       <thead>
       <tr>
         <th rowSpan={2} align="left">My todos ({viewModel.ongoingCount} ongoing
-          /{viewModel.doneCount} done/ {clickCount} clicks)
+          /{viewModel.doneCount} done/ {viewModel.clickCount} clicks)
           <button onClick={() => presenter.addEmptyTodo()}>Add</button>
         </th>
       </tr>
@@ -75,7 +80,7 @@ const TodoList = ({presenter, viewModel}) => {
       <tbody>
       {viewModel.todos.map((todo, index) => (
         <tr key={todo.id}>
-          <td onClick={() => setClickCount(() => clickCount + 1)}>{todo.title}</td>
+          <td onClick={() => presenter.incrementClickCount()}>{todo.title}</td>
           <td><input type="checkbox" value="1" checked={todo.done} onChange={() => presenter.toggleDone(index)}/></td>
         </tr>
       ))}
