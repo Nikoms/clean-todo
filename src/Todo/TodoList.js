@@ -5,26 +5,33 @@ class TodoListPresenter {
   constructor() {
     this.viewModelListener = (viewModel) => null;
     this.viewModel = {
-      todos: [
-        createTodo('Frozen yoghurt', false),
-        createTodo('Ice cream sandwich', false),
-        createTodo('Eclair', false),
-        createTodo('Cupcake', false),
-        createTodo('Gingerbread', false),
-      ],
+      todos: [],
+      doneCount: 0,
+      ongoingCount: 0,
     };
+
+    this._setTodoList([
+      createTodo('Frozen yoghurt', false),
+      createTodo('Ice cream sandwich', false),
+      createTodo('Eclair', false),
+      createTodo('Cupcake', false),
+      createTodo('Gingerbread', false),
+    ]);
   }
 
   onViewModelChange(callback) {
     this.viewModelListener = callback;
   }
-  
+
   addEmptyTodo() {
     this._setTodoList([createTodo('Relax! Edition will come...', false), ...this.viewModel.todos]);
   }
 
   _setTodoList(todos) {
     this.viewModel.todos = todos;
+    this.viewModel.doneCount = todos.filter(t => t.done).length;
+    this.viewModel.ongoingCount = todos.filter(t => !t.done).length;
+
     this.viewModelListener({...this.viewModel});
   }
 
@@ -37,24 +44,19 @@ class TodoListPresenter {
 }
 
 const TodoList = ({presenter, viewModel}) => {
-  const todos = viewModel.todos;
-
-  const ongoingCount = useMemo(() => todos.filter(t => !t.done).length, [todos]);
-  const doneCount = useMemo(() => todos.filter(t => t.done).length, [todos]);
-
   const [clickCount, setClickCount] = useState(0);
 
   return <>
     <table>
       <thead>
       <tr>
-        <th rowSpan={2} align="left">My todos ({ongoingCount} ongoing /{doneCount} done/ {clickCount} clicks)
+        <th rowSpan={2} align="left">My todos ({viewModel.ongoingCount} ongoing /{viewModel.doneCount} done/ {clickCount} clicks)
           <button onClick={() => presenter.addEmptyTodo()}>Add</button>
         </th>
       </tr>
       </thead>
       <tbody>
-      {todos.map((todo, index) => (
+      {viewModel.todos.map((todo, index) => (
         <tr key={todo.id}>
           <td onClick={() => setClickCount(() => clickCount + 1)}><label htmlFor={`done-${todo.id}`}>{todo.title}</label></td>
           <td><input type="checkbox" value="1" id={`done-${todo.id}`} checked={todo.done} onChange={() => presenter.toggleDone(index)}/></td>
