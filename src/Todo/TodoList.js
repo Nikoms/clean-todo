@@ -21,7 +21,7 @@ class TodoListPresenter {
 
   incrementClickCount() {
     this.viewModel.clickCount += 1;
-    this.viewModelListener({...this.viewModel});
+    this._refreshUI();
   }
 
   onViewModelChange(callback) {
@@ -37,7 +37,15 @@ class TodoListPresenter {
     this.viewModel.doneCount = todos.filter(t => t.done).length;
     this.viewModel.ongoingCount = todos.filter(t => !t.done).length;
 
-    this.viewModelListener({...this.viewModel});
+    this._refreshUI();
+  }
+
+  _refreshUI() {
+    this.viewModelListener(this.immutableViewModel());
+  }
+
+  immutableViewModel() {
+    return {...this.viewModel};
   }
 
   toggleDone(index) {
@@ -85,7 +93,7 @@ export const withMVP = (Wrapped) =>
       return presenter;
     }, []);
 
-    return <Wrapped presenter={presenter} viewModel={viewModel || presenter.viewModel}/>;
+    return <Wrapped presenter={presenter} viewModel={viewModel || presenter.immutableViewModel()}/>;
   };
 
 
