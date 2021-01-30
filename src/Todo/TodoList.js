@@ -15,10 +15,8 @@ const fetchTodosFromApi = async () => {
   ];
 };
 
-// The presenter will contain the viewModel and some public method that the view will use
 class TodoListPresenter {
   constructor() {
-    // For the moment, the view model only contain the list of the todos that will be asynchronously loaded
     this.viewModel = {
       todos: [
         createTodo('Frozen yoghurt', false),
@@ -31,8 +29,7 @@ class TodoListPresenter {
   }
 }
 
-const TodoList = ({presenter /* TodoListPresenter */, viewModel /* The viewModel inside TodoListPresenter */}) => {
-  // The todos come from the viewModel
+const TodoList = ({presenter, viewModel }) => {
   const [todos, setTodoList] = useState(viewModel.todos);
 
   const ongoingCount = useMemo(() => todos.filter(t => t.done).length, [todos]);
@@ -67,10 +64,8 @@ const TodoList = ({presenter /* TodoListPresenter */, viewModel /* The viewModel
   </>;
 };
 
-// We will make a "HOC" to wrap the original component. This will allow us to easily pass a presenter and its viewModel
 export const withMVP = (Wrapped) =>
   function WithTodoPresenter() {
-    // We just make sure that the presenter will be instantiated only the first time
     const presenter = useMemo(() => {
       return new TodoListPresenter();
     }, []);
