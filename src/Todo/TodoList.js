@@ -18,26 +18,19 @@ const fetchTodosFromApi = async () => {
 const TodoList = () => {
   const [todos, setTodoList] = useState([]);
   useEffect(function callApi() {
-    //1. Imagine that we are calling an api to get todos 
     fetchTodosFromApi().then(list => setTodoList(list));
   }, []);
 
-  //2. useMemo's callback will only be called when the dependency (todos) changes 
   const ongoingCount = useMemo(() => todos.filter(t => t.done).length, [todos]);
   const doneCount = useMemo(() => todos.filter(t => !t.done).length, [todos]);
 
   const [clickCount, setClickCount] = useState(0);
-
-  // 2 conclusions: 
-  // - Avoid using useEffect "in cascade". If you only use "useEffect" to set a value to a local state and nobody else uses the setState, then you probably should consider "useMemo" instead
-  // - Use "useMemo" for heavy computation or when you have a lot of re-rendering
 
   const addEmptyTodo = () => setTodoList([createTodo('Relax! Edition will come...', false), ...todos]);
   const toggleDone = (index) => setTodoList([...todos.slice(0, index), {
     ...todos[index],
     done: !todos[index].done,
   }, ...todos.slice(index + 1)]);
-
 
   return <>
     <table>
