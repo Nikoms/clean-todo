@@ -32,7 +32,6 @@ const TodoList = () => {
     done: !todos[index].done,
   }, ...todos.slice(index + 1)]);
 
-
   return <>
     <table>
       <thead>
