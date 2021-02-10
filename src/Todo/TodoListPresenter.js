@@ -14,8 +14,12 @@ export class TodoListPresenter {
     };
   }
 
-  loadTodos() {
-    this.useCase.getTodos().then(todos => this._setTodoList(todos));
+  async loadTodos() {
+    try {
+      this._setTodoList(await this.useCase.getTodos());
+    } catch (e) {
+      //Do nothing for the moment
+    }
   }
 
   incrementClickCount() {
