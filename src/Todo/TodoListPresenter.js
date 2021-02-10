@@ -23,7 +23,11 @@ export class TodoListPresenter {
   }
 
   incrementClickCount() {
-    this.viewModel.clickCount += 1;
+    this.update({clickCount: this.viewModel.clickCount + 1});
+  }
+
+  update(newValues) {
+    this.viewModel = {...this.viewModel, ...newValues};
     this._refreshUI();
   }
 
@@ -36,11 +40,11 @@ export class TodoListPresenter {
   }
 
   _setTodoList(todos) {
-    this.viewModel.todos = todos;
-    this.viewModel.doneCount = todos.filter(t => t.done).length;
-    this.viewModel.ongoingCount = todos.filter(t => !t.done).length;
-
-    this._refreshUI();
+    this.update({
+      todos,
+      doneCount: todos.filter(t => t.done).length,
+      ongoingCount: todos.filter(t => !t.done).length,
+    });
   }
 
   _refreshUI() {
