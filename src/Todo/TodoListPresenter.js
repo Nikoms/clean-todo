@@ -1,16 +1,19 @@
 import {createTodo} from './todo.service';
+import {Presenter} from '../sharedKernel/Presenter';
 
-export class TodoListPresenter {
+export class TodoListPresenter extends Presenter {
   constructor(getTodos) {
+    super({
+      viewModel: {
+        todos: [],
+        doneCount: 0,
+        ongoingCount: 0,
+        clickCount: 0,
+      },
+    });
+
     this.useCase = {
       getTodos,
-    };
-    this.viewModelListener = (viewModel) => null;
-    this.viewModel = {
-      todos: [],
-      doneCount: 0,
-      ongoingCount: 0,
-      clickCount: 0,
     };
   }
 
@@ -26,15 +29,6 @@ export class TodoListPresenter {
     this.update({clickCount: this.viewModel.clickCount + 1});
   }
 
-  update(newValues) {
-    this.viewModel = {...this.viewModel, ...newValues};
-    this._refreshUI();
-  }
-
-  onViewModelChange(callback) {
-    this.viewModelListener = callback;
-  }
-
   addEmptyTodo() {
     this._setTodoList([createTodo('Relax! Edition will come...', false), ...this.viewModel.todos]);
   }
@@ -47,13 +41,6 @@ export class TodoListPresenter {
     });
   }
 
-  _refreshUI() {
-    this.viewModelListener(this.immutableViewModel());
-  }
-
-  immutableViewModel() {
-    return {...this.viewModel};
-  }
 
   toggleDone(index) {
     this._setTodoList([
