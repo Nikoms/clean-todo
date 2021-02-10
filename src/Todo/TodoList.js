@@ -1,22 +1,23 @@
-import {useMemo, useState} from 'react';
-import {createTodo} from './todo.service';
+import {useEffect, useMemo, useState} from 'react';
+import {createTodo, getTodos} from './todo.service';
 
 class TodoListPresenter {
-  constructor() {
+  // The presenter receives method(s) that will be called later. Ex: getTodos, login, register, getBlogPosts, etc... . Because we don't want the view to call these. The view only know the presenter (kind of hub) and the viewModel 
+  constructor(getTodos) {
+    this.useCase = {
+      getTodos,
+    };
     this.viewModelListener = (viewModel) => null;
     this.viewModel = {
       todos: [],
       doneCount: 0,
       ongoingCount: 0,
     };
+  }
 
-    this._setTodoList([
-      createTodo('Frozen yoghurt', false),
-      createTodo('Ice cream sandwich', false),
-      createTodo('Eclair', false),
-      createTodo('Cupcake', false),
-      createTodo('Gingerbread', false),
-    ]);
+  loadTodos() {
+    // Simplified version of how we load the todos
+    this.useCase.getTodos().then(todos => this._setTodoList(todos));
   }
 
   onViewModelChange(callback) {
@@ -45,12 +46,17 @@ class TodoListPresenter {
 
 const TodoList = ({presenter, viewModel}) => {
   const [clickCount, setClickCount] = useState(0);
+  useEffect(() => {
+    // Load todos the first time we load the component
+    presenter.loadTodos();
+  }, [presenter]);
 
   return <>
     <table>
       <thead>
       <tr>
-        <th rowSpan={2} align="left">My todos ({viewModel.ongoingCount} ongoing /{viewModel.doneCount} done/ {clickCount} clicks)
+        <th rowSpan={2} align="left">My todos ({viewModel.ongoingCount} ongoing
+          /{viewModel.doneCount} done/ {clickCount} clicks)
           <button onClick={() => presenter.addEmptyTodo()}>Add</button>
         </th>
       </tr>
@@ -72,7 +78,8 @@ export const withMVP = (Wrapped) =>
     const [viewModel, setViewModel] = useState();
 
     const presenter = useMemo(() => {
-      const presenter = new TodoListPresenter();
+      // We inject the function that fetch the todos: Our presenter must not know about how it is done (rest, graphql, etc...) + Our unit test won't need "mock"
+      const presenter = new TodoListPresenter(getTodos);
       presenter.onViewModelChange(setViewModel);
       return presenter;
     }, []);
