@@ -1,28 +1,14 @@
 import {useEffect, useMemo, useState} from 'react';
-import {v4} from 'uuid';
-
-function createTodo(title, done) {
-  return {id: v4(), title, done};
-}
-
-const fetchTodosFromApi = async () => {
-  return [
-    createTodo('Frozen yoghurt', false),
-    createTodo('Ice cream sandwich', false),
-    createTodo('Eclair', false),
-    createTodo('Cupcake', false),
-    createTodo('Gingerbread', false),
-  ];
-};
+import {createTodo, getTodos} from './todo.service';
 
 const TodoList = () => {
   const [todos, setTodoList] = useState([]);
   useEffect(function callApi() {
-    fetchTodosFromApi().then(list => setTodoList(list));
+    getTodos().then(list => setTodoList(list));
   }, []);
 
-  const ongoingCount = useMemo(() => todos.filter(t => t.done).length, [todos]);
-  const doneCount = useMemo(() => todos.filter(t => !t.done).length, [todos]);
+  const ongoingCount = useMemo(() => todos.filter(t => !t.done).length, [todos]);
+  const doneCount = useMemo(() => todos.filter(t => t.done).length, [todos]);
 
   const [clickCount, setClickCount] = useState(0);
 
@@ -44,8 +30,8 @@ const TodoList = () => {
       <tbody>
       {todos.map((todo, index) => (
         <tr key={todo.id}>
-          <td onClick={() => setClickCount(() => clickCount + 1)}>{todo.title}</td>
-          <td><input type="checkbox" value="1" checked={todo.done} onChange={() => toggleDone(index)}/></td>
+          <td onClick={() => setClickCount(() => clickCount + 1)}><label htmlFor={`done-${todo.id}`}>{todo.title}</label></td>
+          <td><input type="checkbox" value="1" id={`done-${todo.id}`} checked={todo.done} onChange={() => toggleDone(index)}/></td>
         </tr>
       ))}
       </tbody>

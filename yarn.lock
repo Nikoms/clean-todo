@@ -1576,7 +1576,7 @@
     "@svgr/plugin-svgo" "^5.4.0"
     loader-utils "^2.0.0"
 
-"@testing-library/dom@^7.28.1":
+"@testing-library/dom@^7.28.1", "@testing-library/dom@^7.29.4":
   version "7.29.4"
   resolved "https://registry.yarnpkg.com/@testing-library/dom/-/dom-7.29.4.tgz#1647c2b478789621ead7a50614ad81ab5ae5b86c"
   integrity sha512-CtrJRiSYEfbtNGtEsd78mk1n1v2TUbeABlNIcOCJdDfkN5/JTOwQEbbQpoSRxGqzcWPgStMvJ4mNolSuBRv1NA==
@@ -1604,18 +1604,18 @@
     lodash "^4.17.15"
     redent "^3.0.0"
 
-"@testing-library/react@^11.1.0":
-  version "11.2.3"
-  resolved "https://registry.yarnpkg.com/@testing-library/react/-/react-11.2.3.tgz#9971ede1c8465a231d7982eeca3c39fc362d5443"
-  integrity sha512-BirBUGPkTW28ULuCwIbYo0y2+0aavHczBT6N9r3LrsswEW3pg25l1wgoE7I8QBIy1upXWkwKpYdWY7NYYP0Bxw==
+"@testing-library/react@^11.2.5":
+  version "11.2.5"
+  resolved "https://registry.yarnpkg.com/@testing-library/react/-/react-11.2.5.tgz#ae1c36a66c7790ddb6662c416c27863d87818eb9"
+  integrity sha512-yEx7oIa/UWLe2F2dqK0FtMF9sJWNXD+2PPtp39BvE0Kh9MJ9Kl0HrZAgEuhUJR+Lx8Di6Xz+rKwSdEPY2UV8ZQ==
   dependencies:
     "@babel/runtime" "^7.12.5"
     "@testing-library/dom" "^7.28.1"
 
-"@testing-library/user-event@^12.1.10":
-  version "12.6.0"
-  resolved "https://registry.yarnpkg.com/@testing-library/user-event/-/user-event-12.6.0.tgz#2d0229e399eb5a0c6c112e848611432356cac886"
-  integrity sha512-FNEH/HLmOk5GO70I52tKjs7WvGYckeE/SrnLX/ip7z2IGbffyd5zOUM1tZ10vsTphqm+VbDFI0oaXu0wcfQsAQ==
+"@testing-library/user-event@^12.6.3":
+  version "12.6.3"
+  resolved "https://registry.yarnpkg.com/@testing-library/user-event/-/user-event-12.6.3.tgz#4a77c56a48823cf8adebd0f57670e4a89c24d058"
+  integrity sha512-PCmbUKofE4SXA7l8jphZAbvv5H3c4ix34xPZ/GNe99fASX//msJRgiMbHIBP+GwRfgVG9c7zmkODSPu2X2vNRw==
   dependencies:
     "@babel/runtime" "^7.12.5"
 
