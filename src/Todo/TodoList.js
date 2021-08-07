@@ -1,6 +1,7 @@
 import {useEffect, useMemo, useState} from 'react';
 import {getTodos} from './todo.service';
 import {TodoListPresenter} from './TodoListPresenter';
+import {connect} from 'react-redux';
 
 
 const TodoList = ({presenter, viewModel}) => {
@@ -33,7 +34,9 @@ const TodoList = ({presenter, viewModel}) => {
 };
 
 export const withMVP = (Wrapped) =>
-  function WithTodoPresenter() {
+  function WithTodoPresenter({reduxTodos}) {
+    //How to link"reduxTodos" to the presenter?
+    console.log({reduxTodos})
     const [viewModel, setViewModel] = useState();
 
     const presenter = useMemo(() => {
@@ -46,4 +49,5 @@ export const withMVP = (Wrapped) =>
   };
 
 
-export default withMVP(TodoList);
+const mapStateToProps = (state) => ({  reduxTodos: state.todo.list })
+export default connect(mapStateToProps)(withMVP(TodoList));
