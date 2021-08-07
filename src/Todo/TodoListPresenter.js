@@ -2,7 +2,7 @@ import {createTodo} from './todo.service';
 import {Presenter} from '../sharedKernel/Presenter';
 
 export class TodoListPresenter extends Presenter {
-  constructor(getTodos) {
+  constructor({getTodos}) {
     super({
       viewModel: {
         todos: [],

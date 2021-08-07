@@ -8,7 +8,7 @@ jest.mock('./todo.service', () => ({
 
 test('it fetches todos from api', async () => {
   getTodos.mockResolvedValue([createTodo('My first todo', false), createTodo('My second todo', true)]);
-  const presenter = new TodoListPresenter(getTodos);
+  const presenter = new TodoListPresenter({getTodos});
   let viewModel = {};
   presenter.onViewModelChange((vm) => viewModel = vm);
 
@@ -21,7 +21,7 @@ test('it fetches todos from api', async () => {
 
 test('a todo can be set as done', async () => {
   getTodos.mockResolvedValue([createTodo('My first todo', false)]);
-  const presenter = new TodoListPresenter(getTodos);
+  const presenter = new TodoListPresenter({getTodos});
   let viewModel = {};
   presenter.onViewModelChange((vm) => viewModel = vm);
   await presenter.loadTodos();
@@ -37,7 +37,7 @@ test('a todo can be set as done', async () => {
 
 test('a todo can be set as ongoing', async () => {
   getTodos.mockResolvedValue([createTodo('My first todo', true)]);
-  const presenter = new TodoListPresenter(getTodos);
+  const presenter = new TodoListPresenter({getTodos});
   let viewModel = {};
   presenter.onViewModelChange((vm) => viewModel = vm);
   await presenter.loadTodos();
@@ -53,7 +53,7 @@ test('a todo can be set as ongoing', async () => {
 
 test('a todo can be added', async () => {
   getTodos.mockResolvedValue([]);
-  const presenter = new TodoListPresenter(getTodos);
+  const presenter = new TodoListPresenter({getTodos});
   let viewModel = {};
   presenter.onViewModelChange((vm) => viewModel = vm);
   await presenter.loadTodos();

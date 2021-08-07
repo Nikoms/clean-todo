@@ -37,7 +37,7 @@ export const withMVP = (Wrapped) =>
     const [viewModel, setViewModel] = useState();
 
     const presenter = useMemo(() => {
-      const presenter = new TodoListPresenter(getTodos);
+      const presenter = new TodoListPresenter({getTodos});
       presenter.onViewModelChange(setViewModel);
       return presenter;
     }, []);
