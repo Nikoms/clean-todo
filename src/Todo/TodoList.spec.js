@@ -1,6 +1,8 @@
 import {fireEvent, render, screen, waitFor} from '@testing-library/react';
 import TodoList from './TodoList';
 import {createTodo, getTodos} from './todo.service';
+import {Provider} from 'react-redux';
+import {buildNewStore} from '../store';
 
 jest.mock('./todo.service', () => ({
   ...jest.requireActual('./todo.service'),
@@ -9,12 +11,17 @@ jest.mock('./todo.service', () => ({
 
 // ndlr: I wouldn't write these tests like that :) I just want to have a lot of tests to compare speed :)
 
+const renderWithRedux = (ui) => {
+  return render(
+    <Provider store={buildNewStore()}>{ui}</Provider>
+  )
+}
 
 const expectTodoListCount = (total) => expect(screen.queryAllByRole('checkbox')).toHaveLength(total);
 
 test('it fetches todos from api', async () => {
   getTodos.mockResolvedValue([createTodo('My first todo', false), createTodo('My second todo', true)]);
-  render(<TodoList/>);
+  renderWithRedux(<TodoList/>);
 
   expect(await screen.findByText('My first todo')).toBeInTheDocument();
   expectTodoListCount(2);
@@ -24,7 +31,7 @@ test('it fetches todos from api', async () => {
 
 test('a todo can be set as done', async () => {
   getTodos.mockResolvedValue([createTodo('My first todo', false)]);
-  render(<TodoList/>);
+  renderWithRedux(<TodoList/>);
   expect(await screen.findByText('My first todo')).toBeInTheDocument();
 
   expect(screen.getByText('My todos', {exact: false})).toHaveTextContent('1 ongoing');
@@ -39,7 +46,7 @@ test('a todo can be set as done', async () => {
 
 test('a todo can be set as ongoing', async () => {
   getTodos.mockResolvedValue([createTodo('My first todo', true)]);
-  render(<TodoList/>);
+  renderWithRedux(<TodoList/>);
   expect(await screen.findByText('My first todo')).toBeInTheDocument();
 
   expect(screen.getByText('My todos', {exact: false})).toHaveTextContent('0 ongoing');
@@ -54,7 +61,7 @@ test('a todo can be set as ongoing', async () => {
 
 test('a todo can be added', async () => {
   getTodos.mockResolvedValue([]);
-  render(<TodoList/>);
+  renderWithRedux(<TodoList/>);
   await waitFor(() => expect(getTodos).toHaveBeenCalledTimes(1));
   expectTodoListCount(0);
   fireEvent.click(screen.getByRole('button'));

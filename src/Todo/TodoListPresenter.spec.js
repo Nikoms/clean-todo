@@ -1,4 +1,4 @@
-import {createTodo, getTodos} from './todo.service';
+import {createTodo} from './todo.service';
 import {TodoListPresenter} from './TodoListPresenter';
 
 jest.mock('./todo.service', () => ({
@@ -6,62 +6,25 @@ jest.mock('./todo.service', () => ({
   getTodos: jest.fn(),
 }));
 
-test('it fetches todos from api', async () => {
-  getTodos.mockResolvedValue([createTodo('My first todo', false), createTodo('My second todo', true)]);
-  const presenter = new TodoListPresenter({getTodos});
+test('The list can be fully reloaded', () => {
+  const presenter = new TodoListPresenter({});
   let viewModel = {};
   presenter.onViewModelChange((vm) => viewModel = vm);
-
-  await presenter.loadTodos();
-
-  expect(viewModel.todos).toHaveLength(2);
-  expect(viewModel.todos.find(t => t.title === 'My first todo').done).toBe(false);
-  expect(viewModel.todos.find(t => t.title === 'My second todo').done).toBe(true);
-});
-
-test('a todo can be set as done', async () => {
-  getTodos.mockResolvedValue([createTodo('My first todo', false)]);
-  const presenter = new TodoListPresenter({getTodos});
-  let viewModel = {};
-  presenter.onViewModelChange((vm) => viewModel = vm);
-  await presenter.loadTodos();
-
-  expect(viewModel.ongoingCount).toBe(1);
-  expect(viewModel.doneCount).toBe(0);
-
-  presenter.toggleDone(0);
-
-  expect(presenter.immutableViewModel().ongoingCount).toBe(0);
-  expect(presenter.immutableViewModel().doneCount).toBe(1);
-});
-
-test('a todo can be set as ongoing', async () => {
-  getTodos.mockResolvedValue([createTodo('My first todo', true)]);
-  const presenter = new TodoListPresenter({getTodos});
-  let viewModel = {};
-  presenter.onViewModelChange((vm) => viewModel = vm);
-  await presenter.loadTodos();
-
-  expect(viewModel.ongoingCount).toBe(0);
-  expect(viewModel.doneCount).toBe(1);
-
-  presenter.toggleDone(0);
-
-  expect(viewModel.ongoingCount).toBe(1);
-  expect(viewModel.doneCount).toBe(0);
-});
-
-test('a todo can be added', async () => {
-  getTodos.mockResolvedValue([]);
-  const presenter = new TodoListPresenter({getTodos});
-  let viewModel = {};
-  presenter.onViewModelChange((vm) => viewModel = vm);
-  await presenter.loadTodos();
-  expect(viewModel.todos).toHaveLength(0);
-
-  presenter.addEmptyTodo();
+  presenter.forceList([createTodo('hello', true)])
 
   expect(viewModel.todos).toHaveLength(1);
-  expect((viewModel.todos)[0].done).toBe(false);
+  expect(viewModel.todos.find(t => t.title === 'hello').done).toBe(true);
 });
-  
+
+test('The presenter does not emit any change if the list has exactly the same pointer', () => {
+  const presenter = new TodoListPresenter({});
+  let changes = 0;
+  presenter.onViewModelChange(() => changes = changes + 1);
+  const todos = [createTodo('hello', true)];
+
+  presenter.forceList(todos);
+  expect(changes).toBe(1);
+
+  presenter.forceList(todos);
+  expect(changes).toBe(1);
+});

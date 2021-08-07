@@ -1,14 +1,13 @@
-import {useEffect, useMemo, useState} from 'react';
-import {getTodos} from './todo.service';
+import {useEffect, useMemo, useRef, useState} from 'react';
 import {TodoListPresenter} from './TodoListPresenter';
 import {connect} from 'react-redux';
+import {addEmptyTodo, loadTodos, toggleDone} from './store/todo.store';
 
 
 const TodoList = ({presenter, viewModel}) => {
   useEffect(() => {
     presenter.loadTodos();
   }, [presenter]);
-
   return <>
     <table>
       <thead>
@@ -34,20 +33,36 @@ const TodoList = ({presenter, viewModel}) => {
 };
 
 export const withMVP = (Wrapped) =>
-  function WithTodoPresenter({reduxTodos}) {
-    //How to link"reduxTodos" to the presenter?
-    console.log({reduxTodos})
-    const [viewModel, setViewModel] = useState();
+  function WithTodoPresenter({reduxTodos, reduxToggleDone, reduxLoadTodos, reduxAddEmptyTodo}) {
+    const [, refresh] = useState(0);
+    const vm = useRef();
 
     const presenter = useMemo(() => {
-      const presenter = new TodoListPresenter({getTodos});
-      presenter.onViewModelChange(setViewModel);
+      const presenter = new TodoListPresenter({
+        toggleDone: reduxToggleDone, 
+        loadTodos: reduxLoadTodos,
+        addEmptyTodo: reduxAddEmptyTodo
+      });
+      presenter.onViewModelChange((newViewModel) => {
+        vm.current = newViewModel;
+        refresh(i => i + 1);
+      });
       return presenter;
-    }, []);
+    }, [reduxToggleDone, reduxLoadTodos, reduxAddEmptyTodo]);
+    
+    //The single source of truth is redux... So... We need to set the list if somebody changed the list
+    presenter.forceList(reduxTodos);
 
-    return <Wrapped presenter={presenter} viewModel={viewModel || presenter.immutableViewModel()}/>;
+    return <Wrapped presenter={presenter} viewModel={vm.current}/>;
   };
 
 
-const mapStateToProps = (state) => ({  reduxTodos: state.todo.list })
-export default connect(mapStateToProps)(withMVP(TodoList));
+
+const mapStateToProps = (state) => ({reduxTodos: state.todo.list});
+const mapDispatchToProps = (dispatch) => ({
+  //These functions will be called by the presenter (not the template!)
+  reduxToggleDone: (index) => dispatch(toggleDone(index)),
+  reduxAddEmptyTodo: () => dispatch(addEmptyTodo()),
+  reduxLoadTodos: () => dispatch(loadTodos)
+});
+export default connect(mapStateToProps, mapDispatchToProps)(withMVP(TodoList));

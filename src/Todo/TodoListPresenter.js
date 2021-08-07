@@ -1,8 +1,7 @@
-import {createTodo} from './todo.service';
 import {Presenter} from '../sharedKernel/Presenter';
 
 export class TodoListPresenter extends Presenter {
-  constructor({getTodos}) {
+  constructor({loadTodos, toggleDone, addEmptyTodo}) {
     super({
       viewModel: {
         todos: [],
@@ -13,15 +12,19 @@ export class TodoListPresenter extends Presenter {
     });
 
     this.useCase = {
-      getTodos,
+      loadTodos,
+      toggleDone,
+      addEmptyTodo
     };
   }
 
-  async loadTodos() {
-    try {
-      this._setTodoList(await this.useCase.getTodos());
-    } catch (e) {
-      //Do nothing for the moment
+  loadTodos() {
+    this.useCase.loadTodos();
+  }
+
+  forceList(newList){ //Coming from redux for example :)
+    if(this.viewModel.todos !== newList){
+      this._setTodoList(newList);
     }
   }
 
@@ -30,7 +33,7 @@ export class TodoListPresenter extends Presenter {
   }
 
   addEmptyTodo() {
-    this._setTodoList([createTodo('Relax! Edition will come...', false), ...this.viewModel.todos]);
+    this.useCase.addEmptyTodo()
   }
 
   _setTodoList(todos) {
@@ -43,9 +46,6 @@ export class TodoListPresenter extends Presenter {
 
 
   toggleDone(index) {
-    this._setTodoList([
-      ...this.viewModel.todos.slice(0, index),
-      {...this.viewModel.todos[index], done: !this.viewModel.todos[index].done},
-      ...this.viewModel.todos.slice(index + 1)]);
+    this.useCase.toggleDone(index);
   }
 }
