@@ -12,7 +12,7 @@ module.exports = {
       return webpackConfig;
     },
     alias: {
-      '@/frontend/app': path.resolve(__dirname, '../app/')
+      '@frontend/app': path.resolve(__dirname, '../app/')
     }
   },
   plugins: [
