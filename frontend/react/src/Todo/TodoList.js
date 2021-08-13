@@ -1,6 +1,6 @@
 import {useEffect, useMemo, useState} from 'react';
-import {getTodos} from './todo.service';
-import {TodoListPresenter} from './TodoListPresenter';
+import {getTodos} from '@/frontend/app/Todo/todo.service';
+import {TodoListPresenter} from '@/frontend/app/Todo/TodoListPresenter';
 
 
 const TodoList = ({presenter, viewModel}) => {

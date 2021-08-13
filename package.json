@@ -1,0 +1,8 @@
+{
+  "private": true,
+  "scripts": {
+    "start-react": "cd frontend/react && yarn start",
+    "test": "cd frontend/app && yarn test && cd ../react && yarn test",
+    "init-dev": "cd frontend/app && yarn && cd ../react && yarn && cd ../.."
+  }
+}

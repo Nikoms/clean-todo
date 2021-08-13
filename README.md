@@ -1,0 +1,3 @@
+- Install all dependencies: `yarn init-dev`
+- Run on react: `yarn start-react`
+- Run test on all folders: `yarn test`
