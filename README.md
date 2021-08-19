@@ -25,3 +25,4 @@ This time, i'll make a todo list... But a todo list with clean architecture prin
 
 - With React: `yarn start-react`
 - With Vue.js: `yarn start-vuejs`
+- With Angular: `yarn start-angular`
