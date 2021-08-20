@@ -1,0 +1,24 @@
+<table>
+  <thead>
+  <tr>
+    <th rowspan="2">My todos ({{viewModel.ongoingCount}}} ongoing
+      /{{viewModel.doneCount}}} done/ {{viewModel.clickCount}}} clicks)
+      <button (click)="presenter.addEmptyTodo()">Add</button>
+    </th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let todo of viewModel.todos; index as i">
+    <td (click)="presenter.incrementClickCount()">
+      <label [for]="'done' + todo.id">{{todo.title}}</label>
+    </td>
+    <td>
+      <input type="checkbox"
+             value="1"
+             [id]="'done' + todo.id"
+             [checked]="todo.done"
+             (change)="presenter.toggleDone(i)"/>
+    </td>
+  </tr>
+  </tbody>
+</table>

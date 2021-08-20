@@ -1,9 +1,9 @@
 import {fireEvent, render, screen, waitFor} from '@testing-library/react';
 import TodoList from './TodoList';
-import {createTodo, getTodos} from './todo.service';
+import {createTodo, getTodos} from '@frontend/app/Todo/todo.service';
 
-jest.mock('./todo.service', () => ({
-  ...jest.requireActual('./todo.service'),
+jest.mock('@frontend/app/Todo/todo.service', () => ({
+  ...jest.requireActual('@frontend/app/Todo/todo.service'),
   getTodos: jest.fn(),
 }));
 

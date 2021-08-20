@@ -5,6 +5,7 @@ export function createTodo(title, done) {
 }
 
 export const getTodos = async () => {
+  await new Promise((resolve) => setTimeout(resolve, 500));
   return [
     createTodo('Frozen yoghurt', false),
     createTodo('Ice cream sandwich', false),

@@ -14,15 +14,5 @@ This time, i'll make a todo list... But a todo list with clean architecture prin
 
 - I don't want to have a "css framework" to style the application. They really mess up the final code and I want to show you "pure" HTML code... And It's also dependencies that I haven't to update or "understand".
 - First commits may not be "clean", but it will allow me to put an understandable base for all frontend develpers
-- This project will be done in React because it's the last I used, not because it's my favorite :)
+- This project will be done in React because it's the last I used, not because it's my favorite :) 
 
-# Dev
-
-- Install all dependencies: `yarn init-dev`
-- Run test on all folders: `yarn test`
-
-# See the UI ❤️
-
-- With React: `yarn start-react`
-- With Vue.js: `yarn start-vuejs`
-- With Angular: `yarn start-angular`
